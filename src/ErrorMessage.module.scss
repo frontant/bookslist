@@ -1,0 +1,15 @@
+@import './colors.scss';
+
+.error {
+  margin: 1em 0;
+  color: $color_error;
+}
+
+.title {
+  line-height: 1em;
+}
+
+.title,
+.body {
+  margin: 0.3em 0;
+}
