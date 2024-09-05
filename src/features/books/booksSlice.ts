@@ -20,4 +20,8 @@ export const { removeBook } = booksSlice.actions;
 
 export const selectBooks = (state: RootState) => state.books.books;
 
+export const selectBook = (state: RootState) => (id:string):Book|null => {
+  return selectBooks(state).find(book => book.id === id) || null;
+}
+
 export default booksSlice.reducer;

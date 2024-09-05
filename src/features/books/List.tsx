@@ -2,8 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
 import { Delete, Edit, Star, StarBorder } from "@mui/icons-material";
 import { Book } from "./Book";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { removeBook, selectBooks } from "./booksSlice";
+import { useAppSelector } from "../../app/hooks";
+import { selectBooks } from "./booksSlice";
+import { useNavigate } from "react-router-dom";
 
 type SortIn = keyof Book;
 type SortDirection = 'asc' | 'desc';
@@ -26,8 +27,8 @@ function List() {
     order: 'asc',
   });
   const [ sortedBooks, setSortedBooks ] = useState<Book[]>([]);
+  const navigate = useNavigate();
   const books = useAppSelector(selectBooks);
-  const dispatch = useAppDispatch();
 
   const doSort = useCallback(() => {
     setSortedBooks(curBooks => ([...curBooks].sort(
@@ -44,11 +45,11 @@ function List() {
   }, [books, doSort]);
   
   function onDelete(book:Book) {
-    dispatch(removeBook(book.id));
+    navigate(`/delete/${book.id}`);
   }
 
   function onEdit(book:Book) {
-    console.log('TODO: onEdit()');
+    navigate(`/edit/${book.id}`);
   }
 
   return (

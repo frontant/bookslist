@@ -4,14 +4,23 @@ import { Add } from '@mui/icons-material';
 import List from './List';
 import { IFetchError } from '../../FetchError';
 import ErrorMessage from '../../ErrorMessage';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 function BooksApp() {
   const [ filter, setFilter ] = useState('');
+  const navigate = useNavigate();
 
   // TODO: show errors
   const [ error ] = useState<IFetchError|null>(null);
 
   // TODO: filter books
+  function onFilter(filterBy: string) {
+    setFilter(filterBy);
+  }
+
+  function onAdd() {
+    navigate('/new');
+  }
 
   return (
     <>
@@ -27,7 +36,7 @@ function BooksApp() {
           <TextField
             label='filter books'
             value={filter}
-            onChange={(e) => setFilter(e.target.value)} />
+            onChange={(e) => onFilter(e.target.value)} />
         </Grid>
         <Grid size={{xs:12, md:10}}>
           <List />
@@ -35,10 +44,11 @@ function BooksApp() {
         <Fab
           color='primary'
           sx={{ transform:'translateY(-50%)' }}
-          onClick={() => console.log('TODO: onAdd()')}>
+          onClick={onAdd}>
           <Add />
         </Fab>
       </Grid>
+      <Outlet />
     </>
   );
 }
