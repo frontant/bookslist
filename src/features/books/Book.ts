@@ -6,4 +6,4 @@ export type Book = {
   rating: number,
 };
 
-export type InputBook = Omit<Book, 'id' & { id?: string }>;
+export type InputBook = Omit<Book, 'id'|'rating' & { id?: string, rating?: number }>;
