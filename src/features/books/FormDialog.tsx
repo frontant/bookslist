@@ -7,8 +7,8 @@ import { InputBook } from './Book';
 import formValidationSchema from './formValidationSchema';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IFetchError } from '../../FetchError';
-import { useAppSelector } from '../../app/hooks';
-import { selectBook } from './booksSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { saveBook, selectBook } from './booksSlice';
 
 function FormDialog() {
   const {
@@ -24,6 +24,7 @@ function FormDialog() {
   const [ open, setOpen ] = useState(false);
   const navigate = useNavigate();
   const getBook = useAppSelector(selectBook);
+  const dispatch = useAppDispatch();
 
   const onClose = useCallback(() => {
     setOpen(false);
@@ -49,8 +50,9 @@ function FormDialog() {
   }, [id, getBook, reset]);
 
   function onSave(book: InputBook) {
-    console.log('TODO: onSave() ', book);
+    dispatch(saveBook(book));
     setOpen(false);
+    navigate('/');
   }
 
   return (
