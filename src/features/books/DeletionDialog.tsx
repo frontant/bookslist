@@ -3,16 +3,19 @@ import { Close } from '@mui/icons-material';
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IFetchError } from "../../FetchError";
+import { useAppDispatch } from "../../app/hooks";
+import { removeBook } from "./booksSlice";
 
 function DeletionDialog() {
   const [ open, setOpen ] = useState(false);
   const { id } = useParams<{id:string}>();
   const [ fetchError ] = useState<IFetchError|null>(null);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onClose = useCallback(() => {
     setOpen(false);
-    navigate('/books');
+    navigate('/');
   }, [navigate]);
 
   useEffect(() => {
@@ -21,7 +24,7 @@ function DeletionDialog() {
 
   function onConfirm(confirmed: boolean) {
     if(confirmed && id) {
-      console.log('TODO: delete confirmed');
+      dispatch(removeBook(id));
       onClose();
     } else {
       onClose();
