@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
 import { Delete, Edit, Star, StarBorder } from "@mui/icons-material";
 import { Book } from "./Book";
-import { useAppSelector } from "../../app/hooks";
-import { RootState } from "../../app/store";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { removeBook, selectBooks } from "./booksSlice";
 
 type SortIn = keyof Book;
 type SortDirection = 'asc' | 'desc';
@@ -26,7 +26,8 @@ function List() {
     order: 'asc',
   });
   const [ sortedBooks, setSortedBooks ] = useState<Book[]>([]);
-  const books = useAppSelector((state: RootState) => state.books);
+  const books = useAppSelector(selectBooks);
+  const dispatch = useAppDispatch();
 
   const doSort = useCallback(() => {
     setSortedBooks(curBooks => ([...curBooks].sort(
@@ -43,7 +44,7 @@ function List() {
   }, [books, doSort]);
   
   function onDelete(book:Book) {
-    console.log('TODO: onDelete()');
+    dispatch(removeBook(book.id));
   }
 
   function onEdit(book:Book) {
