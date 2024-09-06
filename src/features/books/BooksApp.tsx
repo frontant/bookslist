@@ -2,16 +2,11 @@ import { useState } from 'react';
 import { Fab, Grid2 as Grid, TextField } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import List from './List';
-import { IFetchError } from '../../FetchError';
-import ErrorMessage from '../../ErrorMessage';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 function BooksApp() {
   const [ filter, setFilter ] = useState('');
   const navigate = useNavigate();
-
-  // TODO: show errors
-  const [ error ] = useState<IFetchError|null>(null);
 
   // TODO: filter books
   function onFilter(filterBy: string) {
@@ -24,7 +19,6 @@ function BooksApp() {
 
   return (
     <>
-      {error && <ErrorMessage error={error} />}
       <Grid container
         direction='column'
         alignItems="center"
