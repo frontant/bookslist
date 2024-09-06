@@ -1,3 +1,5 @@
+import { Book, BookSort } from "./Book";
+
 export async function fetchBooks() {
   const url = process.env.REACT_APP_BOOKS_SERVER_URL;
 
@@ -11,4 +13,15 @@ export async function fetchBooks() {
   } else {
     throw new Error(`Couldn't fetch books`);
   }
+};
+
+export function sortBooks(books:Book[], sortParams: BookSort) {
+  return books.toSorted((b1, b2) => {
+    const res = b1[sortParams.orderBy].toString().localeCompare(b2[sortParams.orderBy].toString());
+    return sortParams.order === 'asc' ? res : -res;
+  });
+};
+
+export function findBook(books: Book[], id:string):Book|null {
+  return books.find(book => book.id === id) || null;
 };

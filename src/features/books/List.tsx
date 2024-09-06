@@ -1,18 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
 import { Delete, Edit, Star, StarBorder } from "@mui/icons-material";
-import { Book } from "./Book";
+import { Book, BookSort, BookSortIn } from "./Book";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loadBooks, selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "./booksSlice";
 import { useNavigate } from "react-router-dom";
-
-type SortIn = keyof Book;
-type SortDirection = 'asc' | 'desc';
-
-type Sort = {
-  orderBy: SortIn,
-  order: SortDirection,
-}
+import { sortBooks } from "./booksAPI";
 
 const tableHead = {
   title: 'Title',
@@ -22,7 +15,7 @@ const tableHead = {
 };
 
 function List() {
-  const [ sort, setSort ] = useState<Sort>({
+  const [ sort, setSort ] = useState<BookSort>({
     orderBy: 'title',
     order: 'asc',
   });
@@ -31,13 +24,7 @@ function List() {
   const booksLoadingState = useAppSelector(selectBooksLoadingState);
   const booksLoadingError = useAppSelector(selectBooksLoadingError);
   const dispatch = useAppDispatch();
-
-  const sortedBooks = useMemo<Book[]>(() => {
-    return books.toSorted((b1, b2) => {
-      const res = b1[sort.orderBy].toString().localeCompare(b2[sort.orderBy].toString());
-      return sort.order === 'asc' ? res : -res;
-    });
-  }, [sort, books]);
+  const sortedBooks = useMemo<Book[]>(() => sortBooks(books, sort), [sort, books]);
 
   useEffect(() => {
     dispatch(loadBooks());
@@ -70,7 +57,7 @@ function List() {
                   direction={sort.order}
                   onClick={() => {
                     setSort({
-                      orderBy: key as SortIn,
+                      orderBy: key as BookSortIn,
                       order: sort.order === 'asc' ? 'desc' : 'asc'
                     });
                   }} />

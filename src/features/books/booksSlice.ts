@@ -2,7 +2,7 @@ import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@r
 import { Book, InputBook } from "./Book";
 import { RootState } from "../../app/store";
 import { convertToFetchError, IFetchError } from "../../FetchError";
-import { fetchBooks } from "./booksAPI";
+import { fetchBooks, findBook } from "./booksAPI";
 
 export type BooksState = {
   books: Book[],
@@ -76,8 +76,7 @@ export const selectBooksLoadingError = (state: RootState) => state.books.booksLo
 
 export const selectBook = createSelector(
   [selectBooks],
-  (books) => (id:string):Book|null => {
-  return books.find(book => book.id === id) || null;
-});
+  (books) => (id:string):Book|null => findBook(books, id)
+);
 
 export default booksSlice.reducer;
