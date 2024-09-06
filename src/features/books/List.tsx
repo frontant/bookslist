@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
 import { Delete, Edit, Star, StarBorder } from "@mui/icons-material";
 import { Book } from "./Book";
-import { useAppSelector } from "../../app/hooks";
-import { selectBooks } from "./booksSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { loadBooks, selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "./booksSlice";
 import { useNavigate } from "react-router-dom";
 
 type SortIn = keyof Book;
@@ -26,23 +26,22 @@ function List() {
     orderBy: 'title',
     order: 'asc',
   });
-  const [ sortedBooks, setSortedBooks ] = useState<Book[]>([]);
   const navigate = useNavigate();
   const books = useAppSelector(selectBooks);
+  const booksLoadingState = useAppSelector(selectBooksLoadingState);
+  const booksLoadingError = useAppSelector(selectBooksLoadingError);
+  const dispatch = useAppDispatch();
 
-  const doSort = useCallback(() => {
-    setSortedBooks(curBooks => ([...curBooks].sort(
-      (b1, b2) => {
-        const res = b1[sort.orderBy].toString().localeCompare(b2[sort.orderBy].toString());
-        return sort.order === 'asc' ? res : -res;
-      })
-    ));
-  }, [sort]);
+  const sortedBooks = useMemo<Book[]>(() => {
+    return books.toSorted((b1, b2) => {
+      const res = b1[sort.orderBy].toString().localeCompare(b2[sort.orderBy].toString());
+      return sort.order === 'asc' ? res : -res;
+    });
+  }, [sort, books]);
 
   useEffect(() => {
-    setSortedBooks(books);
-    doSort();
-  }, [books, doSort]);
+    dispatch(loadBooks());
+  }, [dispatch]);
   
   function onDelete(book:Book) {
     navigate(`/delete/${book.id}`);
@@ -54,6 +53,12 @@ function List() {
 
   return (
     <Paper>
+      { booksLoadingState === 'error' &&
+        <div className="error">
+          <h2>ERROR</h2>
+          <p>{booksLoadingError?.message}</p>
+        </div>
+      }
       <Table>
         <TableHead>
           <TableRow>
