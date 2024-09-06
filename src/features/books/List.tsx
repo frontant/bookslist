@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loadBooks, selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "./booksSlice";
 import { useNavigate } from "react-router-dom";
 import { sortBooks } from "./booksAPI";
+import ErrorMessage from "../../ErrorMessage";
 
 const tableHead = {
   title: 'Title',
@@ -40,12 +41,7 @@ function List() {
 
   return (
     <Paper>
-      { booksLoadingState === 'error' &&
-        <div className="error">
-          <h2>ERROR</h2>
-          <p>{booksLoadingError?.message}</p>
-        </div>
-      }
+      { booksLoadingState === 'error' && <ErrorMessage error={booksLoadingError}/> }
       <Table>
         <TableHead>
           <TableRow>
