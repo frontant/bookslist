@@ -10,6 +10,12 @@ export type BooksState = {
   booksLoadingError: IFetchError|null,
 }
 
+const initialState:BooksState = {
+  books: [],
+  booksLoadingState: null,
+  booksLoadingError: null,  
+};
+
 export const loadBooks = createAsyncThunk(
   'books/loadBooks',
   async(obj, { rejectWithValue }) => {
@@ -24,11 +30,7 @@ export const loadBooks = createAsyncThunk(
 
 export const booksSlice = createSlice({
   name: 'books',
-  initialState: {
-    books: [],
-    booksLoadingState: null,
-    booksLoadingError: null,
-  } as BooksState,
+  initialState,
   reducers: {
     removeBook: (state, action: PayloadAction<string>) => {
       const bookIndex = state.books.findIndex(book => book.id === action.payload);
