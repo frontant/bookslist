@@ -2,30 +2,34 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton }
 import { Close } from '@mui/icons-material';
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { IFetchError } from "../../FetchError";
-import { useAppDispatch } from "../../app/hooks";
-import { removeBook } from "./booksSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { removeBook, resetBookRemoveState, selectBookRemoveError, selectBookRemoveState } from "./booksSlice";
 
 function DeletionDialog() {
   const [ open, setOpen ] = useState(false);
   const { id } = useParams<{id:string}>();
-  const [ fetchError ] = useState<IFetchError|null>(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const bookRemoveState = useAppSelector(selectBookRemoveState);
+  const bookRemoveError = useAppSelector(selectBookRemoveError);
 
   const onClose = useCallback(() => {
+    dispatch(resetBookRemoveState());
     setOpen(false);
     navigate('/');
-  }, [navigate]);
+  }, [navigate, dispatch]);
 
   useEffect(() => {
-    setOpen(true);
-  }, [id]);
+    if(bookRemoveState === 'completed') {
+      onClose();
+    } else {
+      setOpen(true);
+    }
+  }, [id, bookRemoveState, onClose]);
 
   function onConfirm(confirmed: boolean) {
     if(confirmed && id) {
       dispatch(removeBook(id));
-      onClose();
     } else {
       onClose();
     }
@@ -39,7 +43,7 @@ function DeletionDialog() {
       aria-describedby="confirm-dialog-description">
 
       <DialogTitle id="confirm-dialog-title">
-        { fetchError ? 'Error' : 'Confirm deletion' }
+        { bookRemoveState === 'error' ? 'Error' : 'Confirm deletion' }
       </DialogTitle>
 
       <IconButton
@@ -53,11 +57,13 @@ function DeletionDialog() {
       </IconButton>
 
       <DialogContent id="confirm-dialog-description">
-        { fetchError && <div className="error">{fetchError.message}</div>}
-        { !fetchError && `Do you want remove "${id}"?`}
+        { bookRemoveState === 'error' ?
+          <div className="error">{bookRemoveError?.message}</div> :
+          `Do you want remove "${id}"?`
+        }
       </DialogContent>
 
-      { !fetchError &&
+      { bookRemoveState !== 'error' &&
         <DialogActions>
           <Button onClick={() => onConfirm(false)}>Abbrechen</Button>
           <Button onClick={() => onConfirm(true)}>Ok</Button>
