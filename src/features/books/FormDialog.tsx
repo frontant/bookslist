@@ -6,9 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { InputBook } from './Book';
 import formValidationSchema from './formValidationSchema';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IFetchError } from '../../FetchError';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { saveBook, selectBook } from './booksSlice';
+import { resetBookSaveState, saveBook, selectBook, selectBookSaveError, selectBookSaveState } from './booksSlice';
 
 function FormDialog() {
   const {
@@ -19,17 +18,25 @@ function FormDialog() {
   } = useForm<InputBook>({
     resolver: yupResolver(formValidationSchema),
   });
-  const [ fetchError ] = useState<IFetchError|null>(null);
   const { id } = useParams<{id:string}>();
   const [ open, setOpen ] = useState(false);
   const navigate = useNavigate();
   const getBook = useAppSelector(selectBook);
   const dispatch = useAppDispatch();
+  const bookSaveState = useAppSelector(selectBookSaveState);
+  const bookSaveError = useAppSelector(selectBookSaveError);
 
   const onClose = useCallback(() => {
+    dispatch(resetBookSaveState());
     setOpen(false);
     navigate('/');
-  }, [navigate]);
+  }, [navigate, dispatch]);
+
+  useEffect(() => {
+    if(bookSaveState === 'completed') {
+      onClose();
+    }
+  }, [onClose, bookSaveState]);
 
   useEffect(() => {
     if(id) {
@@ -51,8 +58,6 @@ function FormDialog() {
 
   function onSave(book: InputBook) {
     dispatch(saveBook(book));
-    setOpen(false);
-    navigate('/');
   }
 
   return (
@@ -77,7 +82,7 @@ function FormDialog() {
 
       <form onSubmit={handleSubmit(onSave)}>
         <DialogContent id='form-dialog-description'>
-          {fetchError && <div className='error'>{fetchError.message}</div>}
+          {bookSaveState === 'error' && <div className='error'>Error: {bookSaveError?.message}</div>}
           <Grid container direction={'column'} rowSpacing={1} display='flex'>
             <Grid>
               <TextField fullWidth={true} label='Titel' error={!!errors.title} {...register('title')}/>
