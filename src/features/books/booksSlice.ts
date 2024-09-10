@@ -3,6 +3,8 @@ import { Book, InputBook } from "./Book";
 import { RootState } from "../../app/store";
 import { convertToFetchError, IFetchError } from "../../FetchError";
 import * as BooksAPI from "./booksAPI";
+import { ActionType, getType } from "typesafe-actions";
+import { loadBooksAction } from "./books.actions";
 
 type StateInfo = 'pending'|'completed'|'error';
 
@@ -25,18 +27,6 @@ const initialState:BooksState = {
   bookSaveState: null,
   bookSaveError: null,
 };
-
-export const loadBooks = createAsyncThunk(
-  'books/loadBooks',
-  async(obj, { rejectWithValue }) => {
-    try {
-      const data = await BooksAPI.fetchBooks();
-      return data;
-    } catch(error) {
-      return rejectWithValue(convertToFetchError(error));
-    }
-  },
-);
 
 export const removeBook = createAsyncThunk(
   'books/removeBook',
@@ -88,18 +78,20 @@ export const booksSlice = createSlice({
   extraReducers(builder) {
     builder
       // loadBook
-      .addCase(loadBooks.pending, (state) => {
+      .addCase(getType(loadBooksAction.request), (state) => {
         state.booksLoadingState = 'pending';
         state.booksLoadingError = null;
       })
-      .addCase(loadBooks.fulfilled, (state, action:PayloadAction<Book[]>) => {
+      .addCase(
+        getType(loadBooksAction.success),
+        (state, action:ActionType<typeof loadBooksAction.success>) => {
         state.booksLoadingState = 'completed';
         state.books = action.payload;
         state.booksLoadingError = null;
       })
-      .addCase(loadBooks.rejected, (state, action) => { // TODO: set action type properly
+      .addCase(getType(loadBooksAction.failure), (state, action:ActionType<typeof loadBooksAction.failure>) => {
         state.booksLoadingState = 'error';
-        state.booksLoadingError = action.payload as IFetchError; // TODO: improve by setting action type properly
+        state.booksLoadingError = action.payload;
       })
       
       // removeBook

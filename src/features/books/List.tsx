@@ -3,10 +3,11 @@ import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, Ta
 import { Delete, Edit, Star, StarBorder } from "@mui/icons-material";
 import { Book, BookSort, BookSortIn } from "./Book";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { loadBooks, selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "./booksSlice";
+import { selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "./booksSlice";
 import { useNavigate } from "react-router-dom";
 import { sortBooks } from "./booksAPI";
 import ErrorMessage from "../../ErrorMessage";
+import { loadBooksAction } from "./books.actions";
 
 const tableHead = {
   title: 'Title',
@@ -28,7 +29,7 @@ function List() {
   const sortedBooks = useMemo<Book[]>(() => sortBooks(books, sort), [sort, books]);
 
   useEffect(() => {
-    dispatch(loadBooks());
+    dispatch(loadBooksAction.request());
   }, [dispatch]);
   
   function onDelete(book:Book) {
