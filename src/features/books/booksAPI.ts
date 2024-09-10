@@ -1,19 +1,5 @@
 import { Book, BookSort, InputBook } from "./Book";
 
-export async function deleteBook(id: string) {
-  const url = process.env.REACT_APP_BOOKS_SERVER_URL;
-
-  if(!url) throw new Error('REACT_APP_BOOKS_SERVER_URL undefined');
-
-  const response = await fetch(`${url}/${id}`, {
-    method: 'DELETE',
-  });
-
-  if(!response.ok) {
-    throw new Error(`Couldn't delete the book with the id "${id}".`);
-  }
-}
-
 export async function addBook(book: InputBook) {
   const url = process.env.REACT_APP_BOOKS_SERVER_URL;
   if(!url) throw new Error('REACT_APP_BOOKS_SERVER_URL undefined');

@@ -3,7 +3,8 @@ import { Close } from '@mui/icons-material';
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { removeBook, resetBookRemoveState, selectBookRemoveError, selectBookRemoveState } from "./booksSlice";
+import { resetBookRemoveState, selectBookRemoveError, selectBookRemoveState } from "./booksSlice";
+import { removeBookAction } from "./books.actions";
 
 function DeletionDialog() {
   const [ open, setOpen ] = useState(false);
@@ -29,7 +30,7 @@ function DeletionDialog() {
 
   function onConfirm(confirmed: boolean) {
     if(confirmed && id) {
-      dispatch(removeBook(id));
+      dispatch(removeBookAction.request(id));
     } else {
       onClose();
     }

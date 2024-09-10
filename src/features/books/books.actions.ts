@@ -7,3 +7,9 @@ export const loadBooksAction = createAsyncAction(
   'books/loadBooks/fulfilled',
   'book/loadBooks/rejected'
 )<void, Book[], IFetchError>();
+
+export const removeBookAction = createAsyncAction(
+  'books/removeBook/pending',
+  'books/removeBook/fulfilled',
+  'books/removeBook/rejected',
+)<string, string, IFetchError>();

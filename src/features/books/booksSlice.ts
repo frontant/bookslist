@@ -4,7 +4,7 @@ import { RootState } from "../../app/store";
 import { convertToFetchError, IFetchError } from "../../FetchError";
 import * as BooksAPI from "./booksAPI";
 import { ActionType, getType } from "typesafe-actions";
-import { loadBooksAction } from "./books.actions";
+import { loadBooksAction, removeBookAction } from "./books.actions";
 
 type StateInfo = 'pending'|'completed'|'error';
 
@@ -27,18 +27,6 @@ const initialState:BooksState = {
   bookSaveState: null,
   bookSaveError: null,
 };
-
-export const removeBook = createAsyncThunk(
-  'books/removeBook',
-  async(id: string, { rejectWithValue }) => {
-    try {
-      await BooksAPI.deleteBook(id);
-      return id;
-    } catch(error) {
-      return rejectWithValue(convertToFetchError(error));
-    }
-  }
-);
 
 export const saveBook = createAsyncThunk(
   'books/saveBook',
@@ -95,19 +83,19 @@ export const booksSlice = createSlice({
       })
       
       // removeBook
-      .addCase(removeBook.pending, (state) => {
+      .addCase(getType(removeBookAction.request), (state) => {
         state.bookRemoveState = 'pending';
         state.bookRemoveError = null;
       })
-      .addCase(removeBook.fulfilled, (state, action:PayloadAction<string>) => {
+      .addCase(getType(removeBookAction.success), (state, action:ActionType<typeof removeBookAction.success>) => {
         state.bookRemoveState = 'completed';
         const removedIndex = state.books.findIndex(book => book.id === action.payload);
         state.books.splice(removedIndex, 1);
         state.bookRemoveError = null;
       })
-      .addCase(removeBook.rejected, (state, action) => { // TODO: set action type properly
+      .addCase(getType(removeBookAction.failure), (state, action:ActionType<typeof removeBookAction.failure>) => {
         state.bookRemoveState = 'error';
-        state.bookRemoveError = action.payload as IFetchError; // TODO: improve by setting action type properly
+        state.bookRemoveError = action.payload;
       })
       
       // addBook
@@ -127,7 +115,6 @@ export const booksSlice = createSlice({
       })
       .addCase(saveBook.rejected, (state, action) => { // TODO: set action type properly
         state.bookSaveState = 'error';
-        console.log(action.payload as IFetchError);
         state.bookSaveError = action.payload as IFetchError; // TODO: improve by setting action type properly
       });
   },
