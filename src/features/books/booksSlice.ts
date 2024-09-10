@@ -1,10 +1,10 @@
-import { createAsyncThunk, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Book, InputBook } from "./Book";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { Book } from "./Book";
 import { RootState } from "../../app/store";
-import { convertToFetchError, IFetchError } from "../../FetchError";
-import * as BooksAPI from "./booksAPI";
+import { IFetchError } from "../../FetchError";
+import { findBook } from "./booksHelpers";
 import { ActionType, getType } from "typesafe-actions";
-import { loadBooksAction, removeBookAction } from "./books.actions";
+import { loadBooksAction, removeBookAction, saveBookAction } from "./books.actions";
 
 type StateInfo = 'pending'|'completed'|'error';
 
@@ -27,24 +27,6 @@ const initialState:BooksState = {
   bookSaveState: null,
   bookSaveError: null,
 };
-
-export const saveBook = createAsyncThunk(
-  'books/saveBook',
-  async (book: InputBook, { rejectWithValue }) => {
-    try {
-      let retBook = null;
-
-      if('id' in book) {
-        retBook = await BooksAPI.updateBook(book as Book);
-      } else {
-        retBook = await BooksAPI.addBook(book);
-      }
-
-      return retBook;
-    } catch(error) {
-      return rejectWithValue(convertToFetchError(error));
-    }
-  });
 
 export const booksSlice = createSlice({
   name: 'books',
@@ -98,12 +80,12 @@ export const booksSlice = createSlice({
         state.bookRemoveError = action.payload;
       })
       
-      // addBook
-      .addCase(saveBook.pending, (state) => {
+      // saveBook
+      .addCase(getType(saveBookAction.request), (state) => {
         state.bookSaveState = 'pending';
         state.bookSaveError = null;
       })
-      .addCase(saveBook.fulfilled, (state, action: PayloadAction<Book>) => {
+      .addCase(getType(saveBookAction.success), (state, action: ActionType<typeof saveBookAction.success>) => {
         state.bookSaveState = 'completed';
         state.bookSaveError = null;
         const bookIndex = state.books.findIndex(book => book.id === action.payload.id);
@@ -113,9 +95,9 @@ export const booksSlice = createSlice({
           state.books.push(action.payload);
         }
       })
-      .addCase(saveBook.rejected, (state, action) => { // TODO: set action type properly
+      .addCase(getType(saveBookAction.failure), (state, action:ActionType<typeof saveBookAction.failure>) => {
         state.bookSaveState = 'error';
-        state.bookSaveError = action.payload as IFetchError; // TODO: improve by setting action type properly
+        state.bookSaveError = action.payload;
       });
   },
 });
@@ -132,7 +114,7 @@ export const selectBookSaveError = (state: RootState) => state.books.bookSaveErr
 
 export const selectBook = createSelector(
   [selectBooks],
-  (books) => (id:string):Book|null => BooksAPI.findBook(books, id)
+  (books) => (id:string):Book|null => findBook(books, id)
 );
 
 export default booksSlice.reducer;

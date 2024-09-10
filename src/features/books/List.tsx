@@ -5,7 +5,7 @@ import { Book, BookSort, BookSortIn } from "./Book";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "./booksSlice";
 import { useNavigate } from "react-router-dom";
-import { sortBooks } from "./booksAPI";
+import { sortBooks } from "./booksHelpers";
 import ErrorMessage from "../../ErrorMessage";
 import { loadBooksAction } from "./books.actions";
 

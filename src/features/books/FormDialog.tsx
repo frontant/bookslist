@@ -7,7 +7,8 @@ import { InputBook } from './Book';
 import formValidationSchema from './formValidationSchema';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { resetBookSaveState, saveBook, selectBook, selectBookSaveError, selectBookSaveState } from './booksSlice';
+import { resetBookSaveState, selectBook, selectBookSaveError, selectBookSaveState } from './booksSlice';
+import { saveBookAction } from './books.actions';
 
 function FormDialog() {
   const {
@@ -57,7 +58,7 @@ function FormDialog() {
   }, [id, getBook, reset]);
 
   function onSave(book: InputBook) {
-    dispatch(saveBook(book));
+    dispatch(saveBookAction.request(book));
   }
 
   return (
