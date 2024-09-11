@@ -1,10 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga';
+import { createEpicMiddleware } from 'redux-observable';
 import counterReducer from '../features/counter/counterSlice';
 import booksReducer from '../features/books/booksSlice';
-import rootSaga from '../features/sagas/rootSaga';
+import rootEpic from '../features/books/rootEpic';
 
-const sagaMiddleware = createSagaMiddleware();
+const epicMiddleware = createEpicMiddleware();
 
 export const store = configureStore({
   reducer: {
@@ -13,11 +13,11 @@ export const store = configureStore({
   },
   devTools: true,
   middleware(getDefaultMiddleware) {
-    return [...getDefaultMiddleware(), sagaMiddleware];
+    return [...getDefaultMiddleware(), epicMiddleware];
   }
 });
 
-sagaMiddleware.run(rootSaga);
+epicMiddleware.run(rootEpic);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
