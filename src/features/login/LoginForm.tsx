@@ -11,7 +11,6 @@ function LoginForm() {
   const {
     register,
     handleSubmit,
-    reset,
     formState:{errors},
   } = useForm<Login>({
     resolver: yupResolver(loginValidationSchema),
@@ -29,12 +28,8 @@ function LoginForm() {
   }
 
   useEffect(() => {
-    reset({
-      user: '',
-      password: '',
-    })
     setOpen(true);
-  }, [reset]);
+  }, []);
 
   return (
     <Dialog
