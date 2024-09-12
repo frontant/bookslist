@@ -33,6 +33,7 @@ function LoginForm() {
 
   return (
     <Dialog
+      onClose={onClose}
       open={open}
       aria-labelledby="login-form-title"
       aria-describedby="login-form-description">
