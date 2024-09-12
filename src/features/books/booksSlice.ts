@@ -5,8 +5,7 @@ import { IFetchError } from "../../FetchError";
 import { findBook } from "./booksHelpers";
 import { ActionType, getType } from "typesafe-actions";
 import { loadBooksAction, removeBookAction, saveBookAction } from "./books.actions";
-
-type StateInfo = 'pending'|'completed'|'error';
+import { StateInfo } from "../../app/StateInfo";
 
 export type BooksState = {
   books: Book[],

@@ -2,7 +2,8 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { createEpicMiddleware } from 'redux-observable';
 import counterReducer from '../features/counter/counterSlice';
 import booksReducer from '../features/books/booksSlice';
-import rootEpic from '../features/books/rootEpic';
+import loginReducer from '../features/login/login.slice';
+import rootEpic from './rootEpic';
 
 const epicMiddleware = createEpicMiddleware();
 
@@ -10,6 +11,7 @@ export const store = configureStore({
   reducer: {
     counter: counterReducer,
     books: booksReducer,
+    login: loginReducer,
   },
   devTools: true,
   middleware(getDefaultMiddleware) {
