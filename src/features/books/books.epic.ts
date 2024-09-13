@@ -3,17 +3,20 @@ import { loadBooksAction, removeBookAction, saveBookAction } from "./books.actio
 import { catchError, from, map, of, switchMap } from "rxjs";
 import { Book } from "./Book";
 import { convertToFetchError } from "../../FetchError";
+import { selectToken } from "../login/login.slice";
 
-const loadBooks:Epic = (action$) =>
+const loadBooks:Epic = (action$, state$) =>
   action$.pipe(
     ofType(loadBooksAction.request),
     switchMap(() => 
       from((async () => {
-        const url = process.env.REACT_APP_BOOKS_SERVER_URL;
+        const url = process.env.REACT_APP_BACKEND_BOOKS_URL;
       
-        if(!url) throw new Error('REACT_APP_BOOKS_SERVER_URL undefined');
+        if(!url) throw new Error('REACT_APP_BACKEND_BOOKS_URL undefined');
         
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: { 'authorization': `Bearer ${selectToken(state$.value)}` }
+        });
       
         if(response.ok) {
           return await response.json();
@@ -27,17 +30,18 @@ const loadBooks:Epic = (action$) =>
     )
   );
 
-const removeBook:Epic = (action$) => 
+const removeBook:Epic = (action$, state$) => 
   action$.pipe(
     ofType(removeBookAction.request),
     switchMap(({ payload: id }) =>
       from((async () => {
-        const url = process.env.REACT_APP_BOOKS_SERVER_URL;
+        const url = process.env.REACT_APP_BACKEND_BOOKS_URL;
 
-        if(!url) throw new Error('REACT_APP_BOOKS_SERVER_URL undefined');
+        if(!url) throw new Error('REACT_APP_BACKEND_BOOKS_URL undefined');
     
         const response = await fetch(`${url}/${id}`, {
           method: 'DELETE',
+          headers: { 'authorization': `Bearer ${selectToken(state$.value)}` }
         });
     
         if(response.ok) {
@@ -52,13 +56,13 @@ const removeBook:Epic = (action$) =>
     )
   );
 
-const saveBook:Epic = (action$) =>
+const saveBook:Epic = (action$, state$) =>
   action$.pipe(
     ofType(saveBookAction.request),
     switchMap(({payload: book}) =>
       from((async () => {
-        const url = process.env.REACT_APP_BOOKS_SERVER_URL;
-        if(!url) throw new Error('REACT_APP_BOOKS_SERVER_URL undefined');
+        const url = process.env.REACT_APP_BACKEND_BOOKS_URL;
+        if(!url) throw new Error('REACT_APP_BACKEND_BOOKS_URL undefined');
     
         const doUpdate = 'id' in book;
         const requestUrl =  doUpdate ? `${url}/${book.id}` : url;
@@ -67,7 +71,10 @@ const saveBook:Epic = (action$) =>
         const response = await fetch(requestUrl, {
           method: requestMethod,
           body: JSON.stringify(book),
-          headers: { 'content-type': 'application/json' },
+          headers: {
+            'content-type': 'application/json',
+            'authorization': `Bearer ${selectToken(state$.value)}`,
+          },
         });
         
         if(response.ok) {

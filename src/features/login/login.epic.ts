@@ -8,10 +8,10 @@ const doLogin:Epic = (action$) =>
     ofType(loginAction.request),
     switchMap(({ payload: credentials }) =>
       from((async() => {
-        const url = process.env.REACT_APP_BOOKS_SERVER_URL;
+        const url = process.env.REACT_APP_BACKEND_URL;
 
         if(!url) {
-          throw new Error('REACT_APP_BOOKS_SERVER_URL undefined');
+          throw new Error('REACT_APP_BACKEND_URL undefined');
         }
 
         const response = await fetch(`${url}/login`, {
@@ -21,7 +21,7 @@ const doLogin:Epic = (action$) =>
         });
 
         if(response.ok) {
-          return response.json();
+          return response.text();
         } else {
           throw new Error(`Couldn't login`);
         }
