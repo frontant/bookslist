@@ -4,7 +4,7 @@ import { Login } from "./Login";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginValidationSchema from "./loginValidationSchema";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loginAction } from "./login.actions";
@@ -24,11 +24,11 @@ function LoginForm() {
   const loginState = useAppSelector(selectLoginState);
   const loginError = useAppSelector(selectLoginError);
 
-  function onClose() {
+  const onClose = useCallback(() => {
     dispatch(resetLoginState());
     setOpen(false);
     navigate('/');
-  }
+  }, [navigate, dispatch]);
 
   function onLogin(login:Login) {
     dispatch(loginAction.request(login));
