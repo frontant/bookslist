@@ -24,6 +24,11 @@ export const loginSlice = createSlice({
     resetLoginState: (state) => {
       state.loginState = null;
       state.loginError = null;
+    },
+    resetLoginToInitialState: (state) => {
+      for(const [key, value] of Object.entries(initialState) as [keyof LoginState, any][]) {
+        state[key] = value;
+      }
     }
   },
   extraReducers(builder) {
@@ -44,7 +49,7 @@ export const loginSlice = createSlice({
   }
 });
 
-export const { resetLoginState } = loginSlice.actions;
+export const { resetLoginState, resetLoginToInitialState } = loginSlice.actions;
 
 export const selectToken = (state:RootState) => state.login.token;
 export const selectLoginState = (state:RootState) => state.login.loginState;

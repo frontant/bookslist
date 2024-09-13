@@ -42,7 +42,12 @@ export const booksSlice = createSlice({
     resetBookSaveState: (state) => {
       state.bookSaveState = null;
       state.bookSaveError = null;
-    }
+    },
+    resetBooksToInitialState: (state) => {
+      for(const [key, value] of Object.entries(initialState) as [keyof BooksState, any][]) {
+        state[key] = value;
+      }
+    },
   },
   extraReducers(builder) {
     builder
@@ -101,7 +106,12 @@ export const booksSlice = createSlice({
   },
 });
 
-export const { resetBooksLoadingState, resetBookRemoveState, resetBookSaveState } = booksSlice.actions;
+export const {
+  resetBooksLoadingState,
+  resetBookRemoveState,
+  resetBookSaveState,
+  resetBooksToInitialState,
+} = booksSlice.actions;
 
 export const selectBooks = (state: RootState) => state.books.books;
 export const selectBooksLoadingState = (state: RootState) => state.books.booksLoadingState;
