@@ -7,5 +7,10 @@
     "rating": "Bewertung",
     "release": "Erscheinung",
     "price": "Preis"
+  },
+  "form": {
+    "error" : {
+      "title-required": "\"Titel\" ist ein Pflichtfeld"
+    }
   }
 }

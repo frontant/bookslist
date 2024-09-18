@@ -7,5 +7,10 @@
     "rating": "Rating",
     "release": "Release",
     "price": "Price"
+  },
+  "form": {
+    "error" : {
+      "title-required": "\"Title\" is required"
+    }
   }
 }

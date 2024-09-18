@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { resetBookSaveState, selectBook, selectBookSaveError, selectBookSaveState } from './booksSlice';
 import { saveBookAction } from './books.actions';
+import { useTranslation } from 'react-i18next';
 import { useNavigateWithQuery } from './customHooks';
 
 function FormDialog() {
@@ -27,6 +28,7 @@ function FormDialog() {
   const dispatch = useAppDispatch();
   const bookSaveState = useAppSelector(selectBookSaveState);
   const bookSaveError = useAppSelector(selectBookSaveError);
+  const { t } = useTranslation();
 
   const onClose = useCallback(() => {
     dispatch(resetBookSaveState());
@@ -88,7 +90,7 @@ function FormDialog() {
           <Grid container direction={'column'} rowSpacing={1} display='flex'>
             <Grid>
               <TextField fullWidth={true} label='Titel' error={!!errors.title} {...register('title')}/>
-              { errors.title && <div className='error'>{errors.title.message}</div> }
+              { errors.title && <div className='error'>{t(errors.title.message || '')}</div> }
             </Grid>
             <Grid>
               <TextField fullWidth={true} label='Author' error={!!errors.author} {...register('author')}/>
