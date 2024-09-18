@@ -5,10 +5,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup'
 import { InputBook } from './Book';
 import formValidationSchema from './formValidationSchema';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { resetBookSaveState, selectBook, selectBookSaveError, selectBookSaveState } from './booksSlice';
 import { saveBookAction } from './books.actions';
+import { useNavigateWithQuery } from './customHooks';
 
 function FormDialog() {
   const {
@@ -21,7 +22,7 @@ function FormDialog() {
   });
   const { id } = useParams<{id:string}>();
   const [ open, setOpen ] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useNavigateWithQuery();
   const getBook = useAppSelector(selectBook);
   const dispatch = useAppDispatch();
   const bookSaveState = useAppSelector(selectBookSaveState);

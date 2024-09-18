@@ -1,15 +1,16 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Close } from '@mui/icons-material';
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { resetBookRemoveState, selectBookRemoveError, selectBookRemoveState } from "./booksSlice";
 import { removeBookAction } from "./books.actions";
+import { useNavigateWithQuery } from "./customHooks";
 
 function DeletionDialog() {
   const [ open, setOpen ] = useState(false);
   const { id } = useParams<{id:string}>();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithQuery();
   const dispatch = useAppDispatch();
   const bookRemoveState = useAppSelector(selectBookRemoveState);
   const bookRemoveError = useAppSelector(selectBookRemoveError);

@@ -5,10 +5,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import loginValidationSchema from "./loginValidationSchema";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loginAction } from "./login.actions";
 import { resetLoginState, selectLoginError, selectLoginState } from "./login.slice";
+import { useNavigateWithQuery } from "../books/customHooks";
 
 function LoginForm() {
   const {
@@ -19,7 +19,7 @@ function LoginForm() {
     resolver: yupResolver(loginValidationSchema),
   });
   const [ open, setOpen ] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useNavigateWithQuery();
   const dispatch = useAppDispatch();
   const loginState = useAppSelector(selectLoginState);
   const loginError = useAppSelector(selectLoginError);

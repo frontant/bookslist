@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Fab, Grid2 as Grid, TextField } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import List from './List';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { useNavigateWithQuery } from './customHooks';
 
 function BooksApp() {
   const [ filter, setFilter ] = useState('');
-  const navigate = useNavigate();
+  const navigate = useNavigateWithQuery();
 
   // TODO: filter books
   function onFilter(filterBy: string) {

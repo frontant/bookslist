@@ -4,18 +4,18 @@ import { Delete, Edit, Star, StarBorder } from "@mui/icons-material";
 import { Book, BookSort, BookSortIn } from "./Book";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "./booksSlice";
-import { useNavigate } from "react-router-dom";
 import { sortBooks } from "./booksHelpers";
 import ErrorMessage from "../../ErrorMessage";
 import { loadBooksAction } from "./books.actions";
 import { useTranslation } from "react-i18next";
+import { useNavigateWithQuery } from "./customHooks";
 
 function List() {
   const [ sort, setSort ] = useState<BookSort>({
     orderBy: 'title',
     order: 'asc',
   });
-  const navigate = useNavigate();
+  const navigate = useNavigateWithQuery();
   const books = useAppSelector(selectBooks);
   const booksLoadingState = useAppSelector(selectBooksLoadingState);
   const booksLoadingError = useAppSelector(selectBooksLoadingError);

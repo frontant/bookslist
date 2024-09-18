@@ -28,6 +28,11 @@ function Nav() {
     setAnchorEl(null);
   }
 
+  function changeLanguage(lng: string) {
+    i18n.changeLanguage(lng);
+    handleMenuClose();
+  }
+
   return (
     <AppBar position="sticky">
       <Toolbar>
@@ -42,11 +47,11 @@ function Nav() {
           onClose={handleMenuClose}
           keepMounted>
           <MenuList disablePadding>
-            <MenuItem dense onClick={handleMenuClose}>
-              <Link to='?lng=de' style={{textDecoration: 'none'}} onClick={() => i18n.changeLanguage('de')}>DE</Link>
+            <MenuItem dense>
+              <Link to='?lng=de' style={{textDecoration: 'none'}} onClick={() => changeLanguage('de')}>DE</Link>
             </MenuItem>
-            <MenuItem dense onClick={handleMenuClose}>
-              <Link to='?lng=en' style={{textDecoration: 'none'}} onClick={() => i18n.changeLanguage('en')}>EN</Link>
+            <MenuItem dense>
+              <Link to='?lng=en' style={{textDecoration: 'none'}} onClick={() => changeLanguage('en')}>EN</Link>
             </MenuItem>
           </MenuList>
         </Menu>
