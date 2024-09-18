@@ -69,7 +69,7 @@ function List() {
               <TableCell>{book.title}</TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell>{book.isbn}</TableCell>
-              <TableCell>{Array(5).fill(0).map((item, index) => index < book.rating ? <Star key={index} /> : <StarBorder key={index} />)}</TableCell>
+              <TableCell>{Array(5).fill(0).map((item, index) => book?.rating && index < book.rating ? <Star key={index} /> : <StarBorder key={index} />)}</TableCell>
               <TableCell>
                 <IconButton aria-label="edit book" onClick={() => onEdit(book)}>
                   <Edit />
