@@ -8,13 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { sortBooks } from "./booksHelpers";
 import ErrorMessage from "../../ErrorMessage";
 import { loadBooksAction } from "./books.actions";
-
-const tableHead = {
-  title: 'Title',
-  author: 'Author',
-  isbn: 'ISBN',
-  rating: 'Bewertung',
-};
+import { useTranslation } from "react-i18next";
 
 function List() {
   const [ sort, setSort ] = useState<BookSort>({
@@ -27,6 +21,16 @@ function List() {
   const booksLoadingError = useAppSelector(selectBooksLoadingError);
   const dispatch = useAppDispatch();
   const sortedBooks = useMemo<Book[]>(() => sortBooks(books, sort), [sort, books]);
+  const { t } = useTranslation();
+
+  const tableHead = useMemo(() => ({
+    title: t('list.title'),
+    author: t('list.author'),
+    isbn: t('list.isbn'),
+    rating: t('list.rating'),
+  }), [ t ]);
+  
+  
 
   useEffect(() => {
     dispatch(loadBooksAction.request());

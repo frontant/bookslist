@@ -8,6 +8,7 @@ import LoginForm from './features/login/LoginForm';
 import Nav from './features/navMenu/Nav';
 import { useAppSelector } from './app/hooks';
 import { selectToken } from './features/login/login.slice';
+import './i18n';
 
 function App() {
   const loginToken = useAppSelector(selectToken);

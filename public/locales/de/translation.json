@@ -1,0 +1,11 @@
+{
+  "title": "Bücherliste",
+  "list": {
+    "title": "Titel",
+    "isbn": "ISBN",
+    "author": "Autor",
+    "rating": "Bewertung",
+    "release": "Erscheinung",
+    "price": "Preis"
+  }
+}
