@@ -1,6 +1,6 @@
 {
   "title": "Bücherliste",
-  "list": {
+  "book": {
     "title": "Titel",
     "isbn": "ISBN",
     "author": "Autor",
@@ -11,6 +11,14 @@
   "form": {
     "error" : {
       "title-required": "\"Titel\" ist ein Pflichtfeld"
+    },
+    "title" : {
+      "add-new-book": "Neues Buch anlegen",
+      "edit-book": "Buch bearbeiten"
+    },
+    "action" : {
+      "cancel": "Abbrechen",
+      "save": "Speichern"
     }
   }
 }

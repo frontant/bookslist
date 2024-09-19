@@ -25,10 +25,10 @@ function List() {
   const { t } = useTranslation();
 
   const tableHead = useMemo(() => ({
-    title: t('list.title'),
-    author: t('list.author'),
-    isbn: t('list.isbn'),
-    rating: t('list.rating'),
+    title: t('book.title'),
+    author: t('book.author'),
+    isbn: t('book.isbn'),
+    rating: t('book.rating'),
   }), [ t ]);
   
   

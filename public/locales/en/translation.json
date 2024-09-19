@@ -1,6 +1,6 @@
 {
   "title": "Books list",
-  "list": {
+  "book": {
     "title": "Title",
     "isbn": "ISBN",
     "author": "Author",
@@ -11,6 +11,14 @@
   "form": {
     "error" : {
       "title-required": "\"Title\" is required"
+    },
+    "title" : {
+      "add-new-book": "Add a new book",
+      "edit-book": "Edit book"
+    },
+    "action" : {
+      "cancel": "Cancel",
+      "save": "Save"
     }
   }
 }

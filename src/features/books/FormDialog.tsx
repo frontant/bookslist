@@ -71,7 +71,7 @@ function FormDialog() {
       aria-labelledby='form-dialog-title'
       aria-describedby='form-dialog-description'>
       <DialogTitle id='form-dialog-title'>
-        {id ? 'Buch bearbeiten' : 'Neues Buch anlegen'}
+        { id ? t('form.title.edit-book') : t('form.title.add-new-book') }
       </DialogTitle>
 
       <IconButton
@@ -89,23 +89,23 @@ function FormDialog() {
           {bookSaveState === 'error' && <div className='error'>Error: {bookSaveError?.message}</div>}
           <Grid container direction={'column'} rowSpacing={1} display='flex'>
             <Grid>
-              <TextField fullWidth={true} label='Titel' error={!!errors.title} {...register('title')}/>
+              <TextField fullWidth={true} label={t('book.title')} error={!!errors.title} {...register('title')}/>
               { errors.title && <div className='error'>{t(errors.title.message || '')}</div> }
             </Grid>
             <Grid>
-              <TextField fullWidth={true} label='Author' error={!!errors.author} {...register('author')}/>
+              <TextField fullWidth={true} label={t('book.author')}  error={!!errors.author} {...register('author')}/>
               { errors.author && <div className='error'>{errors.author.message}</div> }
             </Grid>
             <Grid>
-              <TextField fullWidth={true} label='ISBN' error={!!errors.isbn} {...register('isbn')}/>
+              <TextField fullWidth={true} label={t('book.isbn')}  error={!!errors.isbn} {...register('isbn')}/>
               { errors.isbn && <div className='error'>{errors.isbn.message}</div> }
             </Grid>
           </Grid>
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={onClose}>Abbrechen</Button>
-          <Button type='submit'>Speichern</Button>
+          <Button onClick={onClose}>{t('form.action.cancel')}</Button>
+          <Button type='submit'>{t('form.action.save')}</Button>
         </DialogActions>
       </form>
     </Dialog>
