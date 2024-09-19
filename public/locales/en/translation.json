@@ -5,9 +5,11 @@
     "author": "Author",
     "rating": "Rating",
     "release": "Release",
+    "releaseValue": "release: {{release, datetime}}",
     "price": "Price",
+    "priceValue": "{{price, currency(EUR)}}",
     "pages": "Pages",
-    "pagesValue": "{{pages}} Pages"
+    "pagesValue": "Pages: {{pages}}"
   },
   "form": {
     "error" : {
