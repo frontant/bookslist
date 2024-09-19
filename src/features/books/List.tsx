@@ -80,7 +80,7 @@ const List:React.FC<Props> = ({ filterByTitle }) => {
               <TableCell><BookInfo book={book}/></TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell>{book.isbn}</TableCell>
-              <TableCell>{Array(5).fill(0).map((item, index) => book?.rating && index < book.rating ? <Star key={index} /> : <StarBorder key={index} />)}</TableCell>
+              <TableCell>{Array(5).fill(0).map((item, index) => book?.rating && index < book.rating ? <Star key={index} /> : book?.rating ? <StarBorder key={index} /> : '')}</TableCell>
               <TableCell>
                 <IconButton aria-label="edit book" onClick={() => onEdit(book)}>
                   <Edit />

@@ -14,9 +14,13 @@ const BookInfo:React.FC<Props> = ({ book }) => {
     <div className={styles['book-info']}>
       <div className={styles.description}>
         <div>{book.title}</div>
-        <div className={styles.details}>{t('book.releaseValue', { release: book.release })}, {t('book.pagesValue', { pages: book.pages })}</div>
+        <div className={styles.details}>
+          {book.release && t('book.releaseValue', { release: book.release })}
+          {book.release && book.pages && ', '}
+          {book.pages && t('book.pagesValue', { pages: book.pages })}
+        </div>
       </div>
-      <div className={styles.price}>{t('book.priceValue', { price: book.price })}</div>
+      <div className={styles.price}>{book.price && t('book.priceValue', { price: book.price })}</div>
     </div>
   );
 }
