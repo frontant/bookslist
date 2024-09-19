@@ -1,5 +1,4 @@
 {
-  "title": "Books list",
   "book": {
     "title": "Title",
     "isbn": "ISBN",
@@ -10,15 +9,43 @@
   },
   "form": {
     "error" : {
-      "title-required": "\"Title\" is required"
+      "title-required": "\"Title\" is required",
+      "error": "Error"
     },
     "title" : {
       "add-new-book": "Add a new book",
-      "edit-book": "Edit book"
+      "edit-book": "Edit book",
+      "confirm-deletion": "Confirm deletion",
+      "login": "Login"
+    },
+    "text": {
+      "confirm-deletion": "Do you want remove \"{{id}}\"?"
     },
     "action" : {
       "cancel": "Cancel",
-      "save": "Save"
+      "save": "Save",
+      "ok": "OK",
+      "login": "Login"
+    },
+    "field-label": {
+      "username": "Username",
+      "password": "Password",
+      "title": "Title",
+      "isbn": "ISBN",
+      "author": "Author"
     }
+  },
+  "fetch": {
+    "error": {
+      "env-var-undefined": "{{var}} undefined",
+      "deletion-failed": "Couldn't delete the book with the id \"{{id}}\"",
+      "fetch-books-failed": "Couldn't fetch books",
+      "add-book-failed": "Couldn't add the book \"{{title}}\"",
+      "update-book-failed": "Couldn't update the book \"{{title}}\""
+    }
+  },
+  "error": {
+    "unknown": "Unknown error",
+    "login-required": "Please login to see the content"
   }
 }

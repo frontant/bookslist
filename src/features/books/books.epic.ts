@@ -2,7 +2,7 @@ import { combineEpics, Epic, ofType } from "redux-observable";
 import { loadBooksAction, removeBookAction, saveBookAction } from "./books.actions";
 import { catchError, from, map, of, switchMap } from "rxjs";
 import { Book } from "./Book";
-import { convertToFetchError } from "../../FetchError";
+import { convertToFetchError, FetchError } from "../../FetchError";
 import { selectToken } from "../login/login.slice";
 
 const loadBooks:Epic = (action$, state$) =>
@@ -12,7 +12,9 @@ const loadBooks:Epic = (action$, state$) =>
       from((async () => {
         const url = process.env.REACT_APP_BACKEND_BOOKS_URL;
       
-        if(!url) throw new Error('REACT_APP_BACKEND_BOOKS_URL undefined');
+        if(!url) {
+          throw new FetchError("fetch.error.env-var-undefined", { var: "REACT_APP_BACKEND_BOOKS_URL" });
+        }
         
         const response = await fetch(url, {
           headers: { 'authorization': `Bearer ${selectToken(state$.value)}` }
@@ -21,7 +23,7 @@ const loadBooks:Epic = (action$, state$) =>
         if(response.ok) {
           return await response.json();
         } else {
-          throw new Error(`Couldn't fetch books`);
+          throw new FetchError('fetch.error.fetch-books-failed');
         }
       })()).pipe(
         map((data => loadBooksAction.success(data as Book[]))),
@@ -37,7 +39,9 @@ const removeBook:Epic = (action$, state$) =>
       from((async () => {
         const url = process.env.REACT_APP_BACKEND_BOOKS_URL;
 
-        if(!url) throw new Error('REACT_APP_BACKEND_BOOKS_URL undefined');
+        if(!url) {
+          throw new FetchError("fetch.error.env-var-undefined", { var: "REACT_APP_BACKEND_BOOKS_URL" });
+        }
     
         const response = await fetch(`${url}/${id}`, {
           method: 'DELETE',
@@ -47,7 +51,7 @@ const removeBook:Epic = (action$, state$) =>
         if(response.ok) {
           return id;
         } else {
-          throw new Error(`Couldn't delete the book with the id "${id}".`);
+          throw new FetchError('fetch.error.deletion-failed', { id });
         }
       })()).pipe(
         map((data) => removeBookAction.success(data)),
@@ -62,8 +66,11 @@ const saveBook:Epic = (action$, state$) =>
     switchMap(({payload: book}) =>
       from((async () => {
         const url = process.env.REACT_APP_BACKEND_BOOKS_URL;
-        if(!url) throw new Error('REACT_APP_BACKEND_BOOKS_URL undefined');
-    
+
+        if(!url) {
+          throw new FetchError("fetch.error.env-var-undefined", { var: "REACT_APP_BACKEND_BOOKS_URL" });
+        }
+
         const doUpdate = 'id' in book;
         const requestUrl =  doUpdate ? `${url}/${book.id}` : url;
         const requestMethod = doUpdate ? 'PUT' : 'POST';
@@ -80,7 +87,11 @@ const saveBook:Epic = (action$, state$) =>
         if(response.ok) {
           return response.json();
         } else {
-          throw new Error(`Couldn't add the book "${book.title}"`);
+          if(doUpdate) {
+            throw new FetchError('fetch.error.update-book-failed', { title: book.title });
+          } else {
+            throw new FetchError('fetch.error.add-book-failed', { title: book.title });
+          }
         }
       })()).pipe(
         map((data) => saveBookAction.success(data)),

@@ -86,18 +86,18 @@ function FormDialog() {
 
       <form onSubmit={handleSubmit(onSave)}>
         <DialogContent id='form-dialog-description'>
-          {bookSaveState === 'error' && <div className='error'>Error: {bookSaveError?.message}</div>}
+          {bookSaveState === 'error' && <div className='error'>{t('form.error.error')}: {bookSaveError?.message && t(bookSaveError.message, bookSaveError.messageParams)}</div>}
           <Grid container direction={'column'} rowSpacing={1} display='flex'>
             <Grid>
-              <TextField fullWidth={true} label={t('book.title')} error={!!errors.title} {...register('title')}/>
+              <TextField fullWidth={true} label={t('form.field-label.title')} error={!!errors.title} {...register('title')}/>
               { errors.title && <div className='error'>{t(errors.title.message || '')}</div> }
             </Grid>
             <Grid>
-              <TextField fullWidth={true} label={t('book.author')}  error={!!errors.author} {...register('author')}/>
+              <TextField fullWidth={true} label={t('form.field-label.author')}  error={!!errors.author} {...register('author')}/>
               { errors.author && <div className='error'>{errors.author.message}</div> }
             </Grid>
             <Grid>
-              <TextField fullWidth={true} label={t('book.isbn')}  error={!!errors.isbn} {...register('isbn')}/>
+              <TextField fullWidth={true} label={t('form.field-label.isbn')}  error={!!errors.isbn} {...register('isbn')}/>
               { errors.isbn && <div className='error'>{errors.isbn.message}</div> }
             </Grid>
           </Grid>

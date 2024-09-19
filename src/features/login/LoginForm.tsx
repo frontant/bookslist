@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loginAction } from "./login.actions";
 import { resetLoginState, selectLoginError, selectLoginState } from "./login.slice";
 import { useNavigateWithQuery } from "../books/customHooks";
+import { useTranslation } from "react-i18next";
 
 function LoginForm() {
   const {
@@ -23,6 +24,7 @@ function LoginForm() {
   const dispatch = useAppDispatch();
   const loginState = useAppSelector(selectLoginState);
   const loginError = useAppSelector(selectLoginError);
+  const { t } = useTranslation();
 
   const onClose = useCallback(() => {
     dispatch(resetLoginState());
@@ -48,7 +50,7 @@ function LoginForm() {
       open={open}
       aria-labelledby="login-form-title"
       aria-describedby="login-form-description">
-      <DialogTitle id='login-form-title'>Title</DialogTitle>
+      <DialogTitle id='login-form-title'>{t('form.title.login')}</DialogTitle>
 
       <IconButton
         onClick={onClose}
@@ -62,22 +64,22 @@ function LoginForm() {
       
       <form onSubmit={handleSubmit(onLogin)}>
         <DialogContent id='login-form-description'>
-          { loginState === 'error' && <div className="error">Error: {loginError?.message}</div>}
+          { loginState === 'error' && <div className="error">{t('form.error.error')}: {loginError?.message && t(loginError.message, loginError.messageParams)}</div>}
           <Grid container direction="column" rowSpacing={1}>
             <Grid>
-              <TextField fullWidth={true} label='Benutzername' error={!!errors.user} {...register('user')}></TextField>
+              <TextField fullWidth={true} label={t('form.field-label.username')} error={!!errors.user} {...register('user')}></TextField>
               { errors.user && <div className="error">{errors.user.message}</div>}
             </Grid>
             <Grid>
-              <TextField fullWidth={true} label='Passwort' error={!!errors.password} {...register('password')}></TextField>
+              <TextField fullWidth={true} label={t('form.field-label.password')} error={!!errors.password} {...register('password')}></TextField>
               { errors.password && <div className="error">{errors.password.message}</div>}
             </Grid>
           </Grid>
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={onClose}>Abbrechen</Button>
-          <Button type='submit'>Login</Button>
+          <Button onClick={onClose}>{t('form.action.cancel')}</Button>
+          <Button type='submit'>{t('form.action.login')}</Button>
         </DialogActions>
       </form>
     </Dialog>

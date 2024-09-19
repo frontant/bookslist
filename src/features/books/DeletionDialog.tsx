@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { resetBookRemoveState, selectBookRemoveError, selectBookRemoveState } from "./booksSlice";
 import { removeBookAction } from "./books.actions";
 import { useNavigateWithQuery } from "./customHooks";
+import { useTranslation } from "react-i18next";
 
 function DeletionDialog() {
   const [ open, setOpen ] = useState(false);
@@ -14,6 +15,7 @@ function DeletionDialog() {
   const dispatch = useAppDispatch();
   const bookRemoveState = useAppSelector(selectBookRemoveState);
   const bookRemoveError = useAppSelector(selectBookRemoveError);
+  const { t } = useTranslation();
 
   const onClose = useCallback(() => {
     dispatch(resetBookRemoveState());
@@ -44,8 +46,8 @@ function DeletionDialog() {
       aria-labelledby="confirm-dialog-title"
       aria-describedby="confirm-dialog-description">
 
-      <DialogTitle id="confirm-dialog-title">
-        { bookRemoveState === 'error' ? 'Error' : 'Confirm deletion' }
+      <DialogTitle id="confirm-dialog-title" sx={{ paddingRight: 8 }}>
+        { bookRemoveState === 'error' ? t('form.error.error') : t('form.title.confirm-deletion') }
       </DialogTitle>
 
       <IconButton
@@ -60,15 +62,15 @@ function DeletionDialog() {
 
       <DialogContent id="confirm-dialog-description">
         { bookRemoveState === 'error' ?
-          <div className="error">{bookRemoveError?.message}</div> :
-          `Do you want remove "${id}"?`
+          <div className="error">{bookRemoveError?.message && t(bookRemoveError.message, bookRemoveError.messageParams)}</div> :
+          t('form.text.confirm-deletion', { id })
         }
       </DialogContent>
 
       { bookRemoveState !== 'error' &&
         <DialogActions>
-          <Button onClick={() => onConfirm(false)}>Abbrechen</Button>
-          <Button onClick={() => onConfirm(true)}>Ok</Button>
+          <Button onClick={() => onConfirm(false)}>{t('form.action.cancel')}</Button>
+          <Button onClick={() => onConfirm(true)}>{t('form.action.ok')}</Button>
         </DialogActions>}
     </Dialog>
   );

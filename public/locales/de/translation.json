@@ -1,5 +1,4 @@
 {
-  "title": "Bücherliste",
   "book": {
     "title": "Titel",
     "isbn": "ISBN",
@@ -10,15 +9,43 @@
   },
   "form": {
     "error" : {
-      "title-required": "\"Titel\" ist ein Pflichtfeld"
+      "title-required": "\"Titel\" ist ein Pflichtfeld",
+      "error": "Fehler"
     },
     "title" : {
       "add-new-book": "Neues Buch anlegen",
-      "edit-book": "Buch bearbeiten"
+      "edit-book": "Buch bearbeiten",
+      "confirm-deletion": "Löschen bestätigen",
+      "login": "Login"
+    },
+    "text": {
+      "confirm-deletion": "Soll \"{{id}}\" jetzt gelöscht werden?"
     },
     "action" : {
       "cancel": "Abbrechen",
-      "save": "Speichern"
+      "save": "Speichern",
+      "ok": "OK",
+      "login": "Login"
+    },
+    "field-label": {
+      "username": "Benutzername",
+      "password": "Passwort",
+      "title": "Titel",
+      "isbn": "ISBN",
+      "author": "Autor"  
     }
+  },
+  "fetch": {
+    "error": {
+      "env-var-undefined": "{{var}} ist nicht gesetzt",
+      "deletion-failed": "Buch mit der id \"{{id}}\" konnte nicht gelöscht werden",
+      "fetch-books-failed": "Das Holen der Bücherliste is fehlgeschlagen",
+      "add-book-failed": "Das Buch \"{{title}}\" konnte nicht angelegt werden",
+      "update-book-failed": "Das Buch \"{{title}}\" konnte nicht aktualisiert werden"
+    }
+  },
+  "error": {
+    "unknown": "Unbekannter Fehler",
+    "login-required": "Sie müssen sich anmelden, um den Inhalt zu sehen"
   }
 }

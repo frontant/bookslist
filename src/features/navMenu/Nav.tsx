@@ -56,7 +56,7 @@ function Nav() {
           </MenuList>
         </Menu>
         <Box sx={{flexGrow: 1}} />
-        { !loginToken && <Link to="/login" style={{color: 'inherit'}}><Icon.Login /></Link> }
+        { !loginToken && <Link to={'/login' + window.location.search} style={{color: 'inherit'}}><Icon.Login /></Link> }
         { loginToken && <IconButton color="inherit" onClick={onLogout}><Icon.Logout /></IconButton> }
       </Toolbar>
     </AppBar>

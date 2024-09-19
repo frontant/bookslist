@@ -9,16 +9,18 @@ import Nav from './features/navMenu/Nav';
 import { useAppSelector } from './app/hooks';
 import { selectToken } from './features/login/login.slice';
 import './i18n';
+import { useTranslation } from 'react-i18next';
 
 function App() {
   const loginToken = useAppSelector(selectToken);
+  const { t } = useTranslation();
 
   return (
     <div className="App">
       <Nav />
       <div className='App-content'>
         <Routes>
-          <Route path='/' element={loginToken ? <BooksApp /> : <p>Sie müssen sich anmelden, um den Inhalt zu sehen.</p>}>
+          <Route path='/' element={loginToken ? <BooksApp /> : <p>{t('error.login-required')}</p>}>
             <Route path='/new' element={<FormDialog />} />
             <Route path='/edit/:id' element={<FormDialog />} />
             <Route path='/delete/:id' element={<DeletionDialog />} />
