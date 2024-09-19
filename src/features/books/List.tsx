@@ -9,6 +9,7 @@ import ErrorMessage from "../../ErrorMessage";
 import { loadBooksAction } from "./books.actions";
 import { useTranslation } from "react-i18next";
 import { useNavigateWithQuery } from "./customHooks";
+import BookInfo from "./BookInfo";
 
 function List() {
   const [ sort, setSort ] = useState<BookSort>({
@@ -70,7 +71,7 @@ function List() {
         <TableBody>
           {sortedBooks.map(book => (
             <TableRow key={book.id}>
-              <TableCell>{book.title}</TableCell>
+              <TableCell><BookInfo book={book}/></TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell>{book.isbn}</TableCell>
               <TableCell>{Array(5).fill(0).map((item, index) => book?.rating && index < book.rating ? <Star key={index} /> : <StarBorder key={index} />)}</TableCell>

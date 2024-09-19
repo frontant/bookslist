@@ -1,0 +1,11 @@
+.book-info {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.description {
+  max-width: 300px;
+}
