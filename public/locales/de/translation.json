@@ -36,7 +36,8 @@
       "password": "Passwort",
       "title": "Titel",
       "isbn": "ISBN",
-      "author": "Autor"  
+      "author": "Autor",
+      "filter-books": "Bücher filtern"
     }
   },
   "fetch": {

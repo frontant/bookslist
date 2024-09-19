@@ -1,17 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
 import { Delete, Edit, Star, StarBorder } from "@mui/icons-material";
 import { Book, BookSort, BookSortIn } from "./Book";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "./booksSlice";
-import { sortBooks } from "./booksHelpers";
+import { filterBooks, sortBooks } from "./booksHelpers";
 import ErrorMessage from "../../ErrorMessage";
 import { loadBooksAction } from "./books.actions";
 import { useTranslation } from "react-i18next";
 import { useNavigateWithQuery } from "./customHooks";
 import BookInfo from "./BookInfo";
 
-function List() {
+type Props = {
+  filterByTitle?: string,
+}
+const List:React.FC<Props> = ({ filterByTitle }) => {
   const [ sort, setSort ] = useState<BookSort>({
     orderBy: 'title',
     order: 'asc',
@@ -21,8 +24,13 @@ function List() {
   const booksLoadingState = useAppSelector(selectBooksLoadingState);
   const booksLoadingError = useAppSelector(selectBooksLoadingError);
   const dispatch = useAppDispatch();
-  const sortedBooks = useMemo<Book[]>(() => sortBooks(books, sort), [sort, books]);
   const { t } = useTranslation();
+  const filteredBooks = useMemo<Book[]>(() =>
+    sortBooks(
+      filterByTitle ?
+        filterBooks(books, filterByTitle) :
+        books, sort),
+    [sort, books, filterByTitle]);
 
   const tableHead = useMemo(() => ({
     title: t('book.title'),
@@ -30,8 +38,6 @@ function List() {
     isbn: t('book.isbn'),
     rating: t('book.rating'),
   }), [ t ]);
-  
-  
 
   useEffect(() => {
     dispatch(loadBooksAction.request());
@@ -69,7 +75,7 @@ function List() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortedBooks.map(book => (
+          {filteredBooks.map(book => (
             <TableRow key={book.id}>
               <TableCell><BookInfo book={book}/></TableCell>
               <TableCell>{book.author}</TableCell>

@@ -4,14 +4,14 @@ import { Add } from '@mui/icons-material';
 import List from './List';
 import { Outlet } from 'react-router-dom';
 import { useNavigateWithQuery } from './customHooks';
+import { t } from 'i18next';
 
 function BooksApp() {
   const [ filter, setFilter ] = useState('');
   const navigate = useNavigateWithQuery();
 
-  // TODO: filter books
-  function onFilter(filterBy: string) {
-    setFilter(filterBy);
+  function onFilter(filterText: string) {
+    setFilter(filterText);
   }
 
   function onAdd() {
@@ -29,12 +29,12 @@ function BooksApp() {
         data-testid='books-grid'>
         <Grid width='100%'>
           <TextField
-            label='filter books'
+            label={t('form.field-label.filter-books')}
             value={filter}
             onChange={(e) => onFilter(e.target.value)} />
         </Grid>
         <Grid size={{xs:12, md:10}}>
-          <List />
+          <List filterByTitle={filter}/>
         </Grid>
         <Fab
           color='primary'
