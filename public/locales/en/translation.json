@@ -5,7 +5,9 @@
     "author": "Author",
     "rating": "Rating",
     "release": "Release",
-    "price": "Price"
+    "price": "Price",
+    "pages": "Pages",
+    "pagesValue": "{{pages}} Pages"
   },
   "form": {
     "error" : {
