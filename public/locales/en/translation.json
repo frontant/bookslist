@@ -1,4 +1,6 @@
 {
+  "not-found": "Not found",
+  "back-to-homepage": "Back to <0>Home</0>",
   "book": {
     "title": "Title",
     "isbn": "ISBN",
