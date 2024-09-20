@@ -1,12 +1,12 @@
 import * as Icon from "@mui/icons-material";
 import { AppBar, Box, IconButton, Menu, MenuItem, MenuList, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { resetLoginToInitialState, selectToken } from "../login/login.slice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { resetBooksToInitialState } from "../books/booksSlice";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-
+import styles from "./Nav.module.scss";
 
 function Nav() {
   const loginToken = useAppSelector(selectToken);
@@ -42,16 +42,17 @@ function Nav() {
           <Icon.Language />
         </IconButton>
         <Menu
+          className={styles['nav-menu']}
           open={open}
           anchorEl={anchorEl}
           onClose={handleMenuClose}
           keepMounted>
           <MenuList disablePadding>
-            <MenuItem dense>
-              <Link to='?lng=de' style={{textDecoration: 'none'}} onClick={() => changeLanguage('de')}>DE</Link>
+            <MenuItem dense disableGutters>
+              <Link to='?lng=de' onClick={() => changeLanguage('de')}>DE</Link>
             </MenuItem>
-            <MenuItem dense>
-              <Link to='?lng=en' style={{textDecoration: 'none'}} onClick={() => changeLanguage('en')}>EN</Link>
+            <MenuItem dense disableGutters>
+              <Link to='?lng=en' onClick={() => changeLanguage('en')}>EN</Link>
             </MenuItem>
           </MenuList>
         </Menu>
