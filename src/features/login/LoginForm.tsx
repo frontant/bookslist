@@ -4,14 +4,18 @@ import { Login } from "./Login";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginValidationSchema from "./loginValidationSchema";
 import { useForm } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { loginAction } from "./login.actions";
-import { resetLoginState, selectLoginError, selectLoginState } from "./login.slice";
-import { useNavigateWithQuery } from "../books/customHooks";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { IFetchError } from "../../FetchError";
 
-function LoginForm() {
+type Props = {
+  onClose: () => void,
+  onLogin: (login:Login) => void,
+  error?: IFetchError,
+  open: boolean,
+};
+
+const LoginForm:React.FC<Props> = ({ onClose, onLogin, open, error }) => {
   const {
     register,
     handleSubmit,
@@ -19,30 +23,7 @@ function LoginForm() {
   } = useForm<Login>({
     resolver: yupResolver(loginValidationSchema),
   });
-  const [ open, setOpen ] = useState(false);
-  const navigate = useNavigateWithQuery();
-  const dispatch = useAppDispatch();
-  const loginState = useAppSelector(selectLoginState);
-  const loginError = useAppSelector(selectLoginError);
   const { t } = useTranslation();
-
-  const onClose = useCallback(() => {
-    dispatch(resetLoginState());
-    setOpen(false);
-    navigate('/');
-  }, [navigate, dispatch]);
-
-  function onLogin(login:Login) {
-    dispatch(loginAction.request(login));
-  }
-
-  useEffect(() => {
-    if(loginState === 'completed') {
-      onClose();
-    } else {
-      setOpen(true);
-    }
-  }, [loginState, onClose]);
 
   return (
     <Dialog
@@ -64,14 +45,14 @@ function LoginForm() {
       
       <form onSubmit={handleSubmit(onLogin)}>
         <DialogContent id='login-form-description'>
-          { loginState === 'error' && <div className="error">{t('form.error.error')}: {loginError?.message && t(loginError.message, loginError.messageParams)}</div>}
+          { error && <div className="error">{t('form.error.error')}: {t(error.message, error.messageParams)}</div>}
           <Grid container direction="column" rowSpacing={1}>
             <Grid>
               <TextField fullWidth={true} label={t('form.field-label.username')} error={!!errors.user} {...register('user')}></TextField>
               { errors.user && <div className="error">{errors.user.message}</div>}
             </Grid>
             <Grid>
-              <TextField fullWidth={true} label={t('form.field-label.password')} error={!!errors.password} {...register('password')}></TextField>
+              <TextField type="password" fullWidth={true} label={t('form.field-label.password')} error={!!errors.password} {...register('password')}></TextField>
               { errors.password && <div className="error">{errors.password.message}</div>}
             </Grid>
           </Grid>

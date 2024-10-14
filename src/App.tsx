@@ -5,7 +5,7 @@ import BooksApp from './features/books/BooksApp';
 import FormDialog from './features/books/FormDialog';
 import DeletionDialog from './features/books/DeletionDialog';
 import NotFound from './NotFound';
-import LoginForm from './features/login/LoginForm';
+import LoginForm from './features/login/LoginForm.container';
 import Nav from './features/navMenu/Nav';
 import { useAppSelector } from './app/hooks';
 import { selectToken } from './features/login/login.slice';
