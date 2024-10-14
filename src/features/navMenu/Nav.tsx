@@ -1,36 +1,30 @@
 import * as Icon from "@mui/icons-material";
 import { AppBar, Box, IconButton, Menu, MenuItem, MenuList, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { resetLoginToInitialState, selectToken } from "../login/login.slice";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { resetBooksToInitialState } from "../books/booksSlice";
 import styles from "./Nav.module.scss";
 
-function Nav() {
-  const loginToken = useAppSelector(selectToken);
-  const dispatch = useAppDispatch();
+type Props = {
+  onLogout: () => void,
+  isLoggedIn: boolean,
+}
+const Nav:React.FC<Props> = ({ onLogout, isLoggedIn }) => {
   const [ anchorEl, setAnchorEl ] = useState<HTMLElement|null>(null);
   const open = Boolean(anchorEl);
   const { i18n } = useTranslation();
 
-  function onLogout() {
-    dispatch(resetBooksToInitialState());
-    dispatch(resetLoginToInitialState());
-  }
-
-  function handleMenuOpen(event: React.MouseEvent<HTMLElement>) {
+  function onMenuOpen(event: React.MouseEvent<HTMLElement>) {
     setAnchorEl(event.currentTarget);
   }
 
-  function handleMenuClose() {
+  function onMenuClose() {
     setAnchorEl(null);
   }
 
   function changeLanguage(lng: string) {
     i18n.changeLanguage(lng);
-    handleMenuClose();
+    onMenuClose();
   }
 
   return (
@@ -38,14 +32,14 @@ function Nav() {
       <Toolbar>
         <IconButton
           color="inherit"
-          onClick={handleMenuOpen}>
+          onClick={onMenuOpen}>
           <Icon.Language />
         </IconButton>
         <Menu
           className={styles['nav-menu']}
           open={open}
           anchorEl={anchorEl}
-          onClose={handleMenuClose}
+          onClose={onMenuClose}
           keepMounted>
           <MenuList disablePadding>
             <MenuItem dense disableGutters>
@@ -57,8 +51,8 @@ function Nav() {
           </MenuList>
         </Menu>
         <Box sx={{flexGrow: 1}} />
-        { !loginToken && <Link to={'/login' + window.location.search} style={{color: 'inherit'}}><Icon.Login /></Link> }
-        { loginToken && <IconButton color="inherit" onClick={onLogout}><Icon.Logout /></IconButton> }
+        { !isLoggedIn && <Link to={'/login' + window.location.search} style={{color: 'inherit'}}><Icon.Login /></Link> }
+        { isLoggedIn && <IconButton color="inherit" onClick={onLogout}><Icon.Logout /></IconButton> }
       </Toolbar>
     </AppBar>
   );
