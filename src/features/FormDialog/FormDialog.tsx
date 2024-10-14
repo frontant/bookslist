@@ -1,18 +1,22 @@
 import { Close } from '@mui/icons-material';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid2 as Grid, IconButton, TextField } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup'
-import { InputBook } from './Book';
+import { Book, InputBook } from '../books/Book';
 import formValidationSchema from './formValidationSchema';
-import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { resetBookSaveState, selectBook, selectBookSaveError, selectBookSaveState } from './booksSlice';
-import { saveBookAction } from './books.actions';
 import { useTranslation } from 'react-i18next';
-import { useNavigateWithQuery } from './customHooks';
+import { IFetchError } from '../../FetchError';
 
-function FormDialog() {
+type Props = {
+  open: boolean,
+  book?: Book,
+  error?: IFetchError,
+  onClose: () => void,
+  onSave: (book: InputBook) => void,
+}
+
+const FormDialog:React.FC<Props> = ({ open, book, error, onClose, onSave }) => {
   const {
     register,
     handleSubmit,
@@ -21,48 +25,19 @@ function FormDialog() {
   } = useForm<InputBook>({
     resolver: yupResolver(formValidationSchema),
   });
-  const { id } = useParams<{id:string}>();
-  const [ open, setOpen ] = useState(false);
-  const navigate = useNavigateWithQuery();
-  const getBook = useAppSelector(selectBook);
-  const dispatch = useAppDispatch();
-  const bookSaveState = useAppSelector(selectBookSaveState);
-  const bookSaveError = useAppSelector(selectBookSaveError);
   const { t } = useTranslation();
 
-  const onClose = useCallback(() => {
-    dispatch(resetBookSaveState());
-    setOpen(false);
-    navigate('/');
-  }, [navigate, dispatch]);
-
   useEffect(() => {
-    if(bookSaveState === 'completed') {
-      onClose();
-    }
-  }, [onClose, bookSaveState]);
-
-  useEffect(() => {
-    if(id) {
-      setOpen(true);
-      const book = getBook(id);
-      if(book) {
-        reset(book);
-      } else {
-        reset({
-          title: '',
-          author: '',
-          isbn: '',
-        });
-      }
+    if(book) {
+      reset(book);
     } else {
-      setOpen(true);
+      reset({
+        title: '',
+        author: '',
+        isbn: '',
+      });
     }
-  }, [id, getBook, reset]);
-
-  function onSave(book: InputBook) {
-    dispatch(saveBookAction.request(book));
-  }
+  }, [book, reset]);
 
   return (
     <Dialog
@@ -71,7 +46,7 @@ function FormDialog() {
       aria-labelledby='form-dialog-title'
       aria-describedby='form-dialog-description'>
       <DialogTitle id='form-dialog-title'>
-        { id ? t('form.title.edit-book') : t('form.title.add-new-book') }
+        { book ? t('form.title.edit-book') : t('form.title.add-new-book') }
       </DialogTitle>
 
       <IconButton
@@ -86,8 +61,8 @@ function FormDialog() {
 
       <form onSubmit={handleSubmit(onSave)}>
         <DialogContent id='form-dialog-description'>
-          {bookSaveState === 'error' && <div className='error'>{t('form.error.error')}: {bookSaveError?.message && t(bookSaveError.message, bookSaveError.messageParams)}</div>}
-          <Grid container direction={'column'} rowSpacing={1} display='flex'>
+          {error && <div className='error'>{t('form.error.error')}: {t(error.message, error.messageParams)}</div>}
+          <Grid container direction={'column'} rowSpacing='16px' display='flex'>
             <Grid>
               <TextField fullWidth={true} label={t('form.field-label.title')} error={!!errors.title} {...register('title')}/>
               { errors.title && <div className='error'>{t(errors.title.message || '')}</div> }

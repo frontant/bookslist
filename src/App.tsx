@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './App.css';
 import BooksApp from './features/books/BooksApp';
-import FormDialog from './features/books/FormDialog';
+import FormDialog from './features/FormDialog/FormDialog.container';
 import DeletionDialog from './features/books/DeletionDialog';
 import NotFound from './NotFound';
 import LoginForm from './features/login/LoginForm.container';
