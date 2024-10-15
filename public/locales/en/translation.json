@@ -53,6 +53,7 @@
   },
   "error": {
     "unknown": "Unknown error",
-    "login-required": "Please login to see the content"
+    "login-required": "Please login to see the content",
+    "book-deletion-failed": "Couldn't delete the book with the id \"{{id}}\""
   }
 }

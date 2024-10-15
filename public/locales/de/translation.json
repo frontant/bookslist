@@ -53,6 +53,7 @@
   },
   "error": {
     "unknown": "Unbekannter Fehler",
-    "login-required": "Sie müssen sich anmelden, um den Inhalt zu sehen"
+    "login-required": "Sie müssen sich anmelden, um den Inhalt zu sehen",
+    "book-deletion-failed": "Das Buch mit der id \"{{id}}\" konnte nicht gelöscht werden"
   }
 }

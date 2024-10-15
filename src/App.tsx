@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import './App.css';
 import BooksApp from './features/books/BooksApp';
 import FormDialog from './features/FormDialog/FormDialog.container';
-import DeletionDialog from './features/books/DeletionDialog';
+import DeletionDialog from './features/DeletionDialog/DeletionDialog.container';
 import NotFound from './NotFound';
 import LoginForm from './features/login/LoginForm.container';
 import Nav from './features/navMenu/Nav.container';
