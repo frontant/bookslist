@@ -1,41 +1,29 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import LoginForm from "./LoginForm";
 import { useNavigateWithQuery } from "../books/customHooks";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { resetLoginState, selectLoginError, selectLoginState } from "./login.slice";
 import { Login } from "./Login";
-import { loginAction } from "./login.actions";
+import { IFetchError } from "../../FetchError";
 
 function LoginContainer() {
   const [ open, setOpen ] = useState(false);
-  const loginState = useAppSelector(selectLoginState);
-  const loginError = useAppSelector(selectLoginError);
   const navigate = useNavigateWithQuery();
-  const dispatch = useAppDispatch();
+  const [ error, setError ] = useState<IFetchError|null>(null);
 
   const onClose = useCallback(() => {
-    dispatch(resetLoginState());
+    setError(null);
     setOpen(false);
     navigate('/');
-  }, [navigate, dispatch]);
+  }, [navigate]);
 
   function onLogin(login:Login) {
-    dispatch(loginAction.request(login));
+    console.log('todo: do login');
   }
-
-  useEffect(() => {
-    if(loginState === 'completed') {
-      onClose();
-    } else {
-      setOpen(true);
-    }
-  }, [loginState, onClose]);
 
   return <LoginForm
             onLogin={onLogin}
             onClose={onClose}
             open={open}
-            error={loginState === 'error' ? loginError! : undefined}/>
+            error={error || undefined}/>
 }
 
 export default LoginContainer;
