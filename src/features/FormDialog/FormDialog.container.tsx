@@ -1,47 +1,65 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { InputBook } from '../books/Book';
+import { useCallback, useEffect, useState } from 'react';
+import { Book, InputBook } from '../books/Book';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { resetBookSaveState, selectBook, selectBookSaveError, selectBookSaveState } from '../books/booksSlice';
-import { saveBookAction } from '../books/books.actions';
 import { useNavigateWithQuery } from '../books/customHooks';
 import FormDialog from './FormDialog';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchBooks, saveBook } from '../books/booksAPI';
+import { convertToFetchError, IFetchError } from '../../FetchError';
 
 function FormDialogContainer() {
   const { id } = useParams<{id:string}>();
   const [ open, setOpen ] = useState(false);
   const navigate = useNavigateWithQuery();
-  const getBook = useAppSelector(selectBook);
-  const dispatch = useAppDispatch();
-  const bookSaveState = useAppSelector(selectBookSaveState);
-  const bookSaveError = useAppSelector(selectBookSaveError);
-
-  const book = useMemo(() => id ? getBook(id)! : undefined, [id, getBook]);
+  const [ error, setError ] = useState<IFetchError|null>(null);
+  const [ book, setBook ] = useState<Book|null>(null);
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: saveBook,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['books']});
+      onClose();
+    },
+    onError(err) {
+      setError(convertToFetchError(err));
+    },
+  });
 
   useEffect(() => {
-    setOpen(true);
-  }, []);
+    (async () => {
+      if(id) {
+        try {
+          const books = await queryClient.ensureQueryData({ queryKey: ['books'], queryFn: fetchBooks});
+          const book = books ? books.find(book => book.id === id) || null : null;
+
+          if(!book) {
+            throw new Error(`Book with the id ${id} doesn't exist`);
+          }
+
+          setBook(book);
+        } catch(err) {
+          setError(convertToFetchError(err));
+        }
+      }
+
+      setOpen(true);
+    })();
+  }, [id, queryClient]);
 
   const onClose = useCallback(() => {
-    dispatch(resetBookSaveState());
+    setError(null);
     setOpen(false);
     navigate('/');
-  }, [navigate, dispatch]);
-
-  useEffect(() => {
-    if(bookSaveState === 'completed') {
-      onClose();
-    }
-  }, [onClose, bookSaveState]);
+  }, [navigate]);
 
   function onSave(book: InputBook) {
-    dispatch(saveBookAction.request(book));
+    mutation.mutate(book);
   }
 
   return <FormDialog
             open={open}
-            book={book}
-            error={bookSaveState ? bookSaveError! : undefined}
+            book={book || undefined}
+            error={error || undefined}
             onSave={onSave}
             onClose={onClose}/>
 }
