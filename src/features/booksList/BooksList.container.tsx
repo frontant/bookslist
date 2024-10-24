@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Book, BookSort } from "../books/Book";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectBooks, selectBooksLoadingError, selectBooksLoadingState } from "../books/booksSlice";
 import { filterBooks, sortBooks } from "../books/booksHelpers";
-import { loadBooksAction } from "../books/books.actions";
 import { useNavigateWithQuery } from "../books/customHooks";
 import BooksList from "./BooksList";
+import { fetchBooks } from "../books/booksAPI";
+import { useQuery } from "@tanstack/react-query";
+import { convertToFetchError } from "../../FetchError";
 
 type Props = {
   filterByTitle?: string,
@@ -16,21 +16,21 @@ const BooksListContainer:React.FC<Props> = ({ filterByTitle }) => {
     order: 'asc',
   });;
   const navigate = useNavigateWithQuery();
-  const books = useAppSelector(selectBooks);
-  const booksLoadingState = useAppSelector(selectBooksLoadingState);
-  const booksLoadingError = useAppSelector(selectBooksLoadingError);
-  const dispatch = useAppDispatch();
+  const { data: books, error } = useQuery({
+    queryKey: ['books'],
+    queryFn: fetchBooks,
+  });
 
   const filteredBooks = useMemo<Book[]>(() => {
+    if(!books) {
+      return [];
+    }
+
     const filteredBooks = filterByTitle ? filterBooks(books, filterByTitle) : books;
     const sortedBooks = sort ? sortBooks(filteredBooks, sort) : filteredBooks;
     return sortedBooks;
   }, [sort, books, filterByTitle]);
 
-  useEffect(() => {
-    dispatch(loadBooksAction.request());
-  }, [dispatch]);
-  
   function onDelete(book:Book) {
     navigate(`/delete/${book.id}`);
   }
@@ -42,7 +42,7 @@ const BooksListContainer:React.FC<Props> = ({ filterByTitle }) => {
   return <BooksList
             books={filteredBooks}
             sort={sort}
-            error={booksLoadingState === 'error' ? booksLoadingError! : undefined}
+            error={error ? convertToFetchError(error) : undefined}
             onSort={setSort}
             onDelete={onDelete}
             onEdit={onEdit}/>
