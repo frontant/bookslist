@@ -6,13 +6,11 @@ import { StateInfo } from "../../app/StateInfo";
 import { RootState } from "../../app/store";
 
 export type LoginState = {
-  token: string|null,
   loginState: StateInfo|null,
   loginError: IFetchError|null,
 }
 
 const initialState:LoginState = {
-  token: null,
   loginState: null,
   loginError: null,
 }
@@ -40,7 +38,6 @@ export const loginSlice = createSlice({
       .addCase(getType(loginAction.success), (state, action:ActionType<typeof loginAction.success>) => {
         state.loginState = 'completed';
         state.loginError = null;
-        state.token = action.payload;
       })
       .addCase(getType(loginAction.failure), (state, action:ActionType<typeof loginAction.failure>) => {
         state.loginState = 'error';
@@ -51,7 +48,6 @@ export const loginSlice = createSlice({
 
 export const { resetLoginState, resetLoginToInitialState } = loginSlice.actions;
 
-export const selectToken = (state:RootState) => state.login.token;
 export const selectLoginState = (state:RootState) => state.login.loginState;
 export const selectLoginError = (state:RootState) => state.login.loginError;
 

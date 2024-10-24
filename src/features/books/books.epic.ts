@@ -3,7 +3,6 @@ import { loadBooksAction, removeBookAction, saveBookAction } from "./books.actio
 import { catchError, from, map, of, switchMap } from "rxjs";
 import { Book } from "./Book";
 import { convertToFetchError, FetchError } from "../../FetchError";
-import { selectToken } from "../login/login.slice";
 
 const loadBooks:Epic = (action$, state$) =>
   action$.pipe(
@@ -16,9 +15,7 @@ const loadBooks:Epic = (action$, state$) =>
           throw new FetchError("fetch.error.env-var-undefined", { var: "REACT_APP_BACKEND_BOOKS_URL" });
         }
         
-        const response = await fetch(url, {
-          headers: { 'authorization': `Bearer ${selectToken(state$.value)}` }
-        });
+        const response = await fetch(url);
       
         if(response.ok) {
           return await response.json();
@@ -45,7 +42,6 @@ const removeBook:Epic = (action$, state$) =>
     
         const response = await fetch(`${url}/${id}`, {
           method: 'DELETE',
-          headers: { 'authorization': `Bearer ${selectToken(state$.value)}` }
         });
     
         if(response.ok) {
@@ -80,7 +76,6 @@ const saveBook:Epic = (action$, state$) =>
           body: JSON.stringify(book),
           headers: {
             'content-type': 'application/json',
-            'authorization': `Bearer ${selectToken(state$.value)}`,
           },
         });
         
